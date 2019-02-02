@@ -34,7 +34,7 @@ import android.os.UserHandle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import org.lineageos.internal.util.FileUtils;
+import com.android.internal.util.aicp.FileUtils;
 import org.lineageos.settings.device.utils.Constants;
 
 public class Startup extends BroadcastReceiver {

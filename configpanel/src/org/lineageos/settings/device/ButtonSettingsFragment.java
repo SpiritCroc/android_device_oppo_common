@@ -30,7 +30,7 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
-import org.lineageos.internal.util.FileUtils;
+import com.android.internal.util.aicp.FileUtils;
 import org.lineageos.settings.device.utils.Constants;
 
 public class ButtonSettingsFragment extends PreferenceFragment
