@@ -46,8 +46,6 @@ import android.view.KeyEvent;
 import com.android.internal.os.DeviceKeyHandler;
 import com.android.internal.util.ArrayUtils;
 
-import lineageos.providers.LineageSettings;
-
 import java.util.HashSet;
 
 public class KeyHandler implements DeviceKeyHandler {
@@ -210,8 +208,8 @@ public class KeyHandler implements DeviceKeyHandler {
             Message msg = getMessageForKeyEvent(scanCode);
             boolean defaultProximity = mContext.getResources().getBoolean(
                 org.lineageos.platform.internal.R.bool.config_proximityCheckOnWakeEnabledByDefault);
-            boolean proximityWakeCheckEnabled = LineageSettings.System.getInt(
-                    mContext.getContentResolver(), LineageSettings.System.PROXIMITY_ON_WAKE,
+            boolean proximityWakeCheckEnabled = Settings.System.getInt(
+                    mContext.getContentResolver(), Settings.System.PROXIMITY_ON_WAKE,
                     defaultProximity ? 1 : 0) == 1;
             if (mProximityWakeSupported && proximityWakeCheckEnabled && mProximitySensor != null) {
                 mEventHandler.sendMessageDelayed(msg, mProximityTimeOut);
@@ -257,8 +255,8 @@ public class KeyHandler implements DeviceKeyHandler {
         if (mVibrator == null) {
             return;
         }
-        boolean enabled = LineageSettings.System.getInt(mContext.getContentResolver(),
-                LineageSettings.System.TOUCHSCREEN_GESTURE_HAPTIC_FEEDBACK, 1) != 0;
+        boolean enabled = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.TOUCHSCREEN_GESTURE_HAPTIC_FEEDBACK, 1) != 0;
         if (enabled) {
             mVibrator.vibrate(50);
         }
