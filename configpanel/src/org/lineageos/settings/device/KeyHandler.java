@@ -56,7 +56,7 @@ public class KeyHandler implements DeviceKeyHandler {
     private static final int ZEN_MODE_VIBRATION = 4;
 
     // Supported scancodes
-    private static final int FLIP_CAMERA_SCANCODE = 249;
+    //private static final int FLIP_CAMERA_SCANCODE = 249;
     // Keycodes from kernel found in drivers/input/misc/tri_state_key.c
     private static final int SLIDER_TOP = 601;
     private static final int SLIDER_MIDDLE = 602;
@@ -129,9 +129,9 @@ public class KeyHandler implements DeviceKeyHandler {
 
         final Resources resources = mContext.getResources();
         mProximityTimeOut = resources.getInteger(
-                org.lineageos.platform.internal.R.integer.config_proximityCheckTimeout);
+                com.android.internal.R.integer.config_proximityCheckTimeout);
         mProximityWakeSupported = resources.getBoolean(
-                org.lineageos.platform.internal.R.bool.config_proximityCheckOnWake);
+                com.android.internal.R.bool.config_proximityCheckOnWake);
 
         if (mProximityWakeSupported) {
             mSensorManager = context.getSystemService(SensorManager.class);
@@ -151,6 +151,7 @@ public class KeyHandler implements DeviceKeyHandler {
     private class EventHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
+            /*
             if (msg.arg1 == FLIP_CAMERA_SCANCODE) {
                 mGestureWakeLock.acquire(GESTURE_WAKELOCK_DURATION);
 
@@ -159,6 +160,7 @@ public class KeyHandler implements DeviceKeyHandler {
                 mContext.sendBroadcast(intent, Manifest.permission.STATUS_BAR_SERVICE);
                 doHapticFeedback();
             }
+            */
         }
     }
 
@@ -167,25 +169,25 @@ public class KeyHandler implements DeviceKeyHandler {
                 Settings.Secure.USER_SETUP_COMPLETE, 0) != 0;
     }
 
-    public KeyEvent handleKeyEvent(KeyEvent event) {
+    public boolean handleKeyEvent(KeyEvent event) {
         int scanCode = event.getScanCode();
-        boolean isKeySupported = scanCode == FLIP_CAMERA_SCANCODE;
+        boolean isKeySupported = false;//scanCode == FLIP_CAMERA_SCANCODE;
         boolean isSliderModeSupported = sSupportedSliderModes.contains(scanCode);
         if (!isKeySupported && !isSliderModeSupported) {
-            return event;
+            return false;
         }
 
         if (!hasSetupCompleted()) {
-            return event;
+            return false;
         }
 
         // We only want ACTION_UP event, except FLIP_CAMERA_SCANCODE
-        if (scanCode == FLIP_CAMERA_SCANCODE) {
+        if (false/*scanCode == FLIP_CAMERA_SCANCODE*/) {
             if (event.getAction() != KeyEvent.ACTION_DOWN) {
-                return null;
+                return true;
             }
         } else if (event.getAction() != KeyEvent.ACTION_UP) {
-            return null;
+            return true;
         }
 
         if (isSliderModeSupported) {
@@ -207,7 +209,7 @@ public class KeyHandler implements DeviceKeyHandler {
         } else if (!mEventHandler.hasMessages(GESTURE_REQUEST)) {
             Message msg = getMessageForKeyEvent(scanCode);
             boolean defaultProximity = mContext.getResources().getBoolean(
-                org.lineageos.platform.internal.R.bool.config_proximityCheckOnWakeEnabledByDefault);
+                com.android.internal.R.bool.config_proximityCheckOnWakeEnabledByDefault);
             boolean proximityWakeCheckEnabled = Settings.System.getInt(
                     mContext.getContentResolver(), Settings.System.PROXIMITY_ON_WAKE,
                     defaultProximity ? 1 : 0) == 1;
@@ -218,7 +220,7 @@ public class KeyHandler implements DeviceKeyHandler {
                 mEventHandler.sendMessage(msg);
             }
         }
-        return null;
+        return true;
     }
 
     private Message getMessageForKeyEvent(int scancode) {
